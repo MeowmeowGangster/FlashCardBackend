@@ -36,7 +36,7 @@ jobs:
         run: |-
           # Deploy the container to Cloud Run
           gcloud run deploy flash-card-api \
-            --image  \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api \
             --platform managed \
             --region asia-southeast1 \
             --allow-unauthenticated \
