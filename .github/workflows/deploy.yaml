@@ -8,7 +8,7 @@ env:
     SERVICE: 'flashcard-api'
     GOOGLE_CLOUD_PROJECT: '${{ secrets.GCP_PROJECT_ID }}'
     NODE_ENV: "production"
-    GOOGLE_CLOUD_KEYFILE: '${{ secrets.GCP_SA_KEY }'
+    GOOGLE_CLOUD_KEYFILE: '${{ secrets.GCP_SA_KEY }}'
     FIREBASE_PROJECT_ID: '${{ secrets.FIREBASE_PROJECT_ID }}'
     FIREBASE_CLIENT_EMAIL: '${{ secrets.FIREBASE_CLIENT_EMAIL }}' 
     FIREBASE_PRIVATE_KEY: '${{ secrets.FIREBASE_PRIVATE_KEY }}'
