@@ -6,16 +6,8 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('/auth/hello')
-  sayHello(): string {
-    return this.authService.getHello();
-  }
-
   @Get('/auth/login')
-  async login(
-    @Query('idtoken') idtoken: string,
-    @Query('channelid') channelid: string,
-  ) {
-    return await this.authService.login(idtoken, channelid);
+  async login(@Query('idtoken') idtoken: string) {
+    return await this.authService.login(idtoken);
   }
 }
