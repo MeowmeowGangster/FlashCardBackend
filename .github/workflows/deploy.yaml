@@ -2,9 +2,27 @@ name: Flash Card API Deployment to Google Cloud Run
 on:
   push:
     branches:
-      - develop
-
+      - FLASHCARD-4-authentication-api
+env:
+    REGION: 'asia-southeast1'
+    SERVICE: 'flashcard-api'
+    GOOGLE_CLOUD_PROJECT: '${{ secrets.GCP_PROJECT_ID }}'
+    NODE_ENV: "production"
+    GOOGLE_CLOUD_KEYFILE: '${{ secrets.GCP_SA_KEY }}'
+    FIREBASE_PROJECT_ID: '${{ secrets.FIREBASE_PROJECT_ID }}'
+    FIREBASE_CLIENT_EMAIL: '${{ secrets.FIREBASE_CLIENT_EMAIL }}' 
+    FIREBASE_PRIVATE_KEY: '${{ secrets.FIREBASE_PRIVATE_KEY }}'
+    FIREBASE_TYPE: '${{ secrets.FIREBASE_TYPE }}'
+    FIREBASE_PRIVATE_KEY_ID: '${{ secrets.FIREBASE_PRIVATE_KEY_ID }}'
+    FIREBASE_CLIENT_ID: '${{ secrets.FIREBASE_CLIENT_ID }}'
+    FIREBASE_AUTH_URI: '${{ secrets.FIREBASE_AUTH_URI }}'
+    FIREBASE_TOKEN_URI: '${{ secrets.FIREBASE_TOKEN_URI  }}'
+    FIREBASE_AUTH_PROVIDER_X509_CERT_URL: '${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }}'
+    FIREBASE_CLIENT_X509_CERT_URL: '${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }}'
+    MONGODB_URI: '${{ secrets.MONGODB_URI }}'
+    
 jobs:
+
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
@@ -17,7 +35,10 @@ jobs:
         uses: 'google-github-actions/auth@v0'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-    
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+     
       - name: Configure Docker to use the gcloud command-line tool as a credential helper
         run: |-
           # Set up docker to authenticate
@@ -28,28 +49,32 @@ jobs:
           # Build the container on Cloud Build
           gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
 
-      - name: 'Deploy to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@v0'
-        with:
-          service: '${{ env.SERVICE }}'
-          image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api'
-          region: 'asia-southeast1'
-          env_vars: 'NODE_ENV=production \
-                    GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }} \
-                    GOOGLE_CLOUD_KEYFILE=${{ secrets.GCP_SA_KEY }} \
-                    FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} \
-                    FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }} \
-                    FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} \
-                    FIREBAE_TYPE=${{ secrets.FIREBASE_TYPE }} \
-                    FIREBASE_PRIVATE_KEY_ID=${{ secrets.FIREBASE_PRIVATE_KEY_ID }} \
-                    FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} \
-                    FIREBASE_CLIENT_ID=${ { secrets.FIREBASE_CLIENT_ID }} \
-                    FIREBASE_AUTH_URI=${{ secrets.FIREBASE_AUTH_URI }} \
-                    FIREBASE_TOKEN_URI=${{ secrets.FIREBASE_TOKEN_URI }} \
-                    FIREBASE_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }} \
-                    FIREBASE_CLIENT_X509_CERT_URL=${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }} \
-                    MONGODB_URI=${{ secrets.MONGODB_URI }}'
           
-  
-            
+      - name: Deploy to Cloud Run
+        id: deploy  
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
+          env_vars: |
+            NODE_ENV=${{ env.NODE_ENV }}
+            GOOGLE_CLOUD_PROJECT=${{ env.GOOGLE_CLOUD_PROJECT }}
+            GOOGLE_CLOUD_KEYFILE=${{ env.GOOGLE_CLOUD_KEYFILE }}
+            FIREBASE_PROJECT_ID=${{ env.FIREBASE_PROJECT_ID }}
+            FIREBASE_CLIENT_EMAIL=${{ env.FIREBASE_CLIENT_EMAIL }}
+            FIREBASE_PRIVATE_KEY=${{ env.FIREBASE_PRIVATE_KEY }}
+            FIREBASE_TYPE=${{ env.FIREBASE_TYPE }}
+            FIREBASE_PRIVATE_KEY_ID=${{ env.FIREBASE_PRIVATE_KEY_ID }}
+            FIREBASE_CLIENT_ID=${{ env.FIREBASE_CLIENT_ID }}
+            FIREBASE_AUTH_URI=${{ env.FIREBASE_AUTH_URI }}
+            FIREBASE_TOKEN_URI=${{ env.FIREBASE_TOKEN_URI }}
+            FIREBASE_AUTH_PROVIDER_X509_CERT_URL=${{ env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }}
+            FIREBASE_CLIENT_X509_CERT_URL=${{ env.FIREBASE_CLIENT_X509_CERT_URL }}
+            MONGODB_URI=${{ env.MONGODB_URI }}
+       
+
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
+           
                       
