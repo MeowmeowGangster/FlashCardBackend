@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: flash-card-backend
     ports:
-      - ":5001"
+      - "8080:8080"
     
     env_file:
       - .env  
-    command: "node dist/main.js"
+
