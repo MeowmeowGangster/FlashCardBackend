@@ -12,7 +12,7 @@ env:
     FIREBASE_PROJECT_ID: '${{ secrets.FIREBASE_PROJECT_ID }}'
     FIREBASE_CLIENT_EMAIL: '${{ secrets.FIREBASE_CLIENT_EMAIL }}' 
     FIREBASE_PRIVATE_KEY: '${{ secrets.FIREBASE_PRIVATE_KEY }}'
-    FIREBAE_TYPE: '${{ secrets.FIREBASE_TYPE }}'
+    FIREBASE_TYPE: '${{ secrets.FIREBASE_TYPE }}'
     FIREBASE_PRIVATE_KEY_ID: '${{ secrets.FIREBASE_PRIVATE_KEY_ID }}'
     FIREBASE_CLIENT_ID: '${{ secrets.FIREBASE_CLIENT_ID }}'
     FIREBASE_AUTH_URI: '${{ secrets.FIREBASE_AUTH_URI }}'
@@ -22,6 +22,7 @@ env:
     MONGODB_URI: '${{ secrets.MONGODB_URI }}'
     
 jobs:
+
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
@@ -55,8 +56,7 @@ jobs:
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          # NOTE: If required, update to the appropriate source folder
-          source: ./
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
           env_vars: |
             NODE_ENV=${{ env.NODE_ENV }}
             GOOGLE_CLOUD_PROJECT=${{ env.GOOGLE_CLOUD_PROJECT }}
