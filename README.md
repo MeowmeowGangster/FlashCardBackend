@@ -30,7 +30,7 @@ npm install หรือ yarn
 npm run dev หรือ yarn dev
 ```
 
-6 . เข้าไปที่ <http://localhost:5001>
+6 . เข้าไปที่ <http://localhost:8080>
 
 7 . ทำงานใน Branch ที่สร้างไว้
 
