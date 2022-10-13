@@ -31,13 +31,6 @@ jobs:
           # Build the container on Cloud Build
           gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
 
-      - name: 'Deploy to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@v0'
-        with:
-          service: '${{ env.SERVICE }}'
-          image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api'
-          region: 'asia-southeast1'
-          env_vars: 'NAME="Hello World"'
           
       - name: Deploy to Cloud Run
         run: |-
