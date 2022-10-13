@@ -57,6 +57,7 @@ FROM node:18-alpine As production
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
-CMD [ "node","dist/main.js" ]
+EXPOSE 8080 443
 
-EXPOSE ${PORT}
+CMD [ "node", "dist/main.js" ]
+
