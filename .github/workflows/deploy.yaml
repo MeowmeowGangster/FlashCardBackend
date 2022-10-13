@@ -58,6 +58,8 @@ jobs:
           region: ${{ env.REGION }}
           image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
           env_vars: |
+            REGION='${{ env.REGION }}'
+            SERVICE='${{ env.SERVICE }}' 
             NODE_ENV=${{ env.NODE_ENV }}
             GOOGLE_CLOUD_PROJECT=${{ env.GOOGLE_CLOUD_PROJECT }}
             GOOGLE_CLOUD_KEYFILE=${{ env.GOOGLE_CLOUD_KEYFILE }}
@@ -77,4 +79,4 @@ jobs:
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
            
-                      
+   
