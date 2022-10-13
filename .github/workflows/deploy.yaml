@@ -55,6 +55,6 @@ jobs:
             --set-env-vars=FIREBASE_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }} \
             --set-env-vars=FIREBASE_CLIENT_X509_CERT_URL=${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }} \
             --set-env-vars=MONGODB_URI=${{ secrets.MONGODB_URI }}
-            --set-env-vars=PORT=${{ secrets.PORT }}
+          
          
                       
