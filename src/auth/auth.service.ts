@@ -1,69 +1,84 @@
-import { FirebaseService } from '@app/common/firebase/firebase.service';
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
+import * as admin from 'firebase-admin';
 
+const firebase_params = {
+  type: process.env.FIREBASE_TYPE,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  clientId: process.env.FIREBASE_CLIENT_ID,
+  authUri: process.env.FIREBASE_AUTH_URI,
+  tokenUri: process.env.FIREBASE_TOKEN_URI,
+  authProviderX509CertUrl: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+  clientC509CertUrl: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+};
 @Injectable()
 export class AuthService {
-  private readonly firebaseAdmin;
+  private readonly logger = new Logger(AuthService.name);
+  private firebaseApp: any;
   constructor(private readonly httpService: HttpService) {
-    this.firebaseAdmin = FirebaseService;
-  }
-  getHello(): string {
-    return 'Hello World!';
+    this.firebaseApp = admin
+      .initializeApp({
+        credential: admin.credential.cert(firebase_params),
+      })
+      .auth();
   }
 
-  async valifyLineToken(token: string) {
-    const decodedToken = await this.firebaseAdmin.auth().verifyIdToken(token);
-    return decodedToken;
-  }
-  async validateUser(idToken: string, channelId: string): Promise<any> {
-    const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    };
-    const response$ = this.httpService.post(
-      `https://api.line.me/oauth2/v2.1/verify`,
+  async validateUser(idToken: string): Promise<any> {
+    const response$ = this.httpService.get(
+      `https://api.line.me/v2/profile`,
+
       {
-        idToken: idToken,
-        channelId: channelId,
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
       },
-      { headers: headers },
     );
-    return await lastValueFrom(response$);
+    const response = await lastValueFrom(response$);
+    return response.data;
   }
 
-  async login(idtoken: string, channelid: string) {
-    const decodedToken = await this.validateUser(idtoken, channelid);
-    const user = await this.firebaseAdmin.auth().getUserByID(decodedToken.sub);
-    if (!user) {
-      // If not user, create user
-      await this.firebaseAdmin
-        .auth()
+  async login(idtoken: string) {
+    const decodedToken = await this.validateUser(idtoken);
+
+    this.logger.log(decodedToken);
+    const uidExists = this.firebaseApp
+      .getUser(decodedToken.userId)
+      .then(() => true)
+      .catch(() => false);
+
+    if (!uidExists) {
+      await this.firebaseApp
         .createUser({
-          uid: decodedToken.uid,
-          displayName: decodedToken.name,
-          photoURL: decodedToken.picture,
+          uid: decodedToken.userId,
+          displayName: decodedToken.displayName,
+          photoURL: decodedToken.pictureUrl,
         })
         .then((userRecord) => {
           // See the UserRecord reference doc for the contents of userRecord.
-          console.log('Successfully created new user:', userRecord.uid);
+          this.logger.log('Successfully created new user:', userRecord.uid);
         })
         .catch((error) => {
-          console.log('Error creating new user:', error);
+          this.logger.log('Error creating new user:', error);
         });
-
-      // create custom claims
-      await this.firebaseAdmin
-        .auth()
-        .createCustomToken(decodedToken.uid, {
+      const token = await this.firebaseApp.createCustomToken(
+        decodedToken.userId,
+        {
           role: 'user',
-        })
-        .then((customToken) => {
-          return customToken;
-        })
-        .catch((error) => {
-          console.log('Error creating custom token:', error);
-        });
+        },
+      );
+      return { token: token };
+    } else {
+      const token = await this.firebaseApp.createCustomToken(
+        decodedToken.userId,
+        {
+          role: 'user',
+        },
+      );
+      return { token: token };
     }
   }
 }
