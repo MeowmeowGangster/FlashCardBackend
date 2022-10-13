@@ -17,7 +17,10 @@ jobs:
         uses: 'google-github-actions/auth@v0'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-    
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+     
       - name: Configure Docker to use the gcloud command-line tool as a credential helper
         run: |-
           # Set up docker to authenticate
@@ -34,22 +37,31 @@ jobs:
           service: '${{ env.SERVICE }}'
           image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api'
           region: 'asia-southeast1'
-          env_vars: 'NODE_ENV=production \
-                    GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }} \
-                    GOOGLE_CLOUD_KEYFILE=${{ secrets.GCP_SA_KEY }} \
-                    FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} \
-                    FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }} \
-                    FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} \
-                    FIREBAE_TYPE=${{ secrets.FIREBASE_TYPE }} \
-                    FIREBASE_PRIVATE_KEY_ID=${{ secrets.FIREBASE_PRIVATE_KEY_ID }} \
-                    FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} \
-                    FIREBASE_CLIENT_ID=${ { secrets.FIREBASE_CLIENT_ID }} \
-                    FIREBASE_AUTH_URI=${{ secrets.FIREBASE_AUTH_URI }} \
-                    FIREBASE_TOKEN_URI=${{ secrets.FIREBASE_TOKEN_URI }} \
-                    FIREBASE_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }} \
-                    FIREBASE_CLIENT_X509_CERT_URL=${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }} \
-                    MONGODB_URI=${{ secrets.MONGODB_URI }}'
+          env_vars: 'NAME="Hello World"'
           
-  
-            
+      - name: Deploy to Cloud Run
+        run: |-
+          # Deploy the container to Cloud Run
+          gcloud run deploy flash-card-api \
+            --image  \
+            --platform managed \
+            --region asia-southeast1 \
+            --port=${{ secrets.PORT }} \
+            --allow-unauthenticated \
+            --set-env-vars=NODE_ENV=production \
+            --set-env-vars=GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }} \
+            --set-env-vars=GOOGLE_CLOUD_KEYFILE=${{ secrets.GCP_SA_KEY }} \
+            --set-env-vars=FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} \
+            --set-env-vars=FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }} \
+            --set-env-vars=FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} \
+            --set-env-vars=FIREBAE_TYPE=${{ secrets.FIREBASE_TYPE }} \
+            --set-env-vars=FIREBASE_PRIVATE_KEY_ID=${{ secrets.FIREBASE_PRIVATE_KEY_ID }} \
+            --set-env-vars=FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} \
+            --set-env-vars=FIREBASE_CLIENT_ID=${ { secrets.FIREBASE_CLIENT_ID }} \
+            --set-env-vars=FIREBASE_AUTH_URI=${{ secrets.FIREBASE_AUTH_URI }} \
+            --set-env-vars=FIREBASE_TOKEN_URI=${{ secrets.FIREBASE_TOKEN_URI }} \
+            --set-env-vars=FIREBASE_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }} \
+            --set-env-vars=FIREBASE_CLIENT_X509_CERT_URL=${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }} \
+            --set-env-vars=MONGODB_URI=${{ secrets.MONGODB_URI }}
+         
                       
