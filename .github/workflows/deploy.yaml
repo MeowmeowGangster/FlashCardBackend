@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - FLASHCARD-4-authentication-api
+      - develop
 env:
     REGION: 'asia-southeast1'
     SERVICE: 'flashcard-api'
