@@ -47,11 +47,10 @@ jobs:
           gcloud auth configure-docker
 
       - name: Build and Push Docker Image
-        run: |
-          docker build -t \
-          gcr.io/${{ env.GOOGLE_CLOUD_PROJECT }}/${{ env.SERVICE }}:${{ github.sha }} .
-          docker push gcr.io/${{ env.GOOGLE_CLOUD_PROJECT }}/${{ env.SERVICE }}:${{ github.sha }}
-        
+        run: |-
+          # Build the container on Cloud Build
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
+
           
       - name: Deploy to Cloud Run
         id: deploy  
@@ -59,7 +58,7 @@ jobs:
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: gcr.io/${{ env.GOOGLE_CLOUD_PROJECT }}/${{ env.SERVICE }}
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/flash-card-api
           env_vars: |
             REGION='${{ env.REGION }}'
             SERVICE='${{ env.SERVICE }}' 
