@@ -21,13 +21,14 @@ export class FirebaseService {
   constructor() {
     this.firebaseApp = admin.initializeApp({
       credential: admin.credential.cert(firebase_params),
+      storageBucket: 'gs://standupcodelab.appspot.com',
     });
     this.logger.log('Firebase initialized');
   }
   getAuth() {
     return this.firebaseApp.auth();
   }
-  getStorage() {
-    return this.firebaseApp.storage();
+  getApp() {
+    return this.firebaseApp;
   }
 }
