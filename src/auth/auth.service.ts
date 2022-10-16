@@ -26,6 +26,13 @@ export class AuthService {
     return response.data;
   }
 
+  async validateFirebaseIdToken(idToken: string) {
+    const decodedToken = await this.firebaseService
+      .getAuth()
+      .verifyIdToken(idToken);
+    return decodedToken;
+  }
+
   async login(idtoken: string) {
     const decodedToken = await this.validateUser(idtoken);
 
