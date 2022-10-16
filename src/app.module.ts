@@ -4,13 +4,19 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CardModule } from './card/card.module';
 import { DeckModule } from './deck/deck.module';
-import { DatabaseModule } from '@app/common';
+import { DatabaseModule, FirebaseModule } from '@app/common';
 import { AssetsModule } from './assets/assets.module';
-import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, CardModule, DeckModule, AssetsModule],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    CardModule,
+    DeckModule,
+    AssetsModule,
+    FirebaseModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, AuthMiddleware],
+  providers: [AppService],
 })
 export class AppModule {}
