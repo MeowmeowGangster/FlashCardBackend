@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - FLASHCARD-4-authentication-api
+      - develop
 env:
     REGION: 'asia-southeast1'
     SERVICE: 'flashcard-api'
@@ -44,6 +45,7 @@ jobs:
           # Set up docker to authenticate
           # via gcloud command-line tool.
           gcloud auth configure-docker
+
       - name: Build and Push Docker Image
         run: |-
           # Build the container on Cloud Build
