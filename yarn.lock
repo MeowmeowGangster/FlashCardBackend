@@ -1306,7 +1306,7 @@
     webpack "5.74.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^9.0.0":
+"@nestjs/common@^9.1.4":
   version "9.1.4"
   resolved "https://registry.npmjs.org/@nestjs/common/-/common-9.1.4.tgz"
   integrity sha512-hmGTZ8ShKFDqqlU02uU8e/8PNE4bnES4pcFa6s/T1pLDYWjyf/75Klunro1W4aQPHcxnnohBmB27WxMqFTPEfw==
@@ -1340,7 +1340,7 @@
 
 "@nestjs/mapped-types@1.1.0":
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.1.0.tgz#54a9fa61079635dd6c3c75fd9593f20b2302a55b"
+  resolved "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-1.1.0.tgz"
   integrity sha512-+2kSly4P1QI+9eGt+/uGyPdEG1hVz7nbpqPHWZVYgoqz8eOHljpXPag+UCVRw9zo2XCu4sgNUIGe8Uk0+OvUQg==
 
 "@nestjs/mongoose@^9.2.0":
@@ -1377,7 +1377,7 @@
 
 "@nestjs/swagger@^6.1.2":
   version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-6.1.2.tgz#5eb9c134fc976f16c139ecaf80a7f02a5d33da46"
+  resolved "https://registry.npmjs.org/@nestjs/swagger/-/swagger-6.1.2.tgz"
   integrity sha512-RU1DeTDyuN/lRXKFWaf7I9LYF34/ale3IIGeY3romAcXL/N9W0+50Ek3ou+Ajd5FqpLqzt7saYhnaQegVuU4UQ==
   dependencies:
     "@nestjs/mapped-types" "1.1.0"
@@ -6006,7 +6006,7 @@ supports-preserve-symlinks-flag@^1.0.0:
 
 swagger-ui-dist@4.14.0:
   version "4.14.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.14.0.tgz#e34d807464eb84578c43902e393084a1a6fbda52"
+  resolved "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-4.14.0.tgz"
   integrity sha512-TBzhheU15s+o54Cgk9qxuYcZMiqSm/SkvKnapoGHOF66kz0Y5aGjpzj5BT/vpBbn6rTPJ9tUYXQxuDWfsjiGMw==
 
 symbol-observable@4.0.0:
