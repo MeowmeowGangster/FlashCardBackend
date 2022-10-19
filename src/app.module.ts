@@ -6,6 +6,9 @@ import { CardModule } from './card/card.module';
 import { DeckModule } from './deck/deck.module';
 import { DatabaseModule, FirebaseModule } from '@app/common';
 import { AssetsModule } from './assets/assets.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -14,7 +17,13 @@ import { AssetsModule } from './assets/assets.module';
     CardModule,
     DeckModule,
     AssetsModule,
-    FirebaseModule,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
