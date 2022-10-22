@@ -5,6 +5,9 @@ export type DeckDocument = Deck&Document;
 
 @Schema({timestamps:true})
 export class Deck{
+    @Prop({required:true})
+    ownerID:string;
+
     @Prop()
     deckID:string;
 
