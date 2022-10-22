@@ -16,17 +16,20 @@ export class DeckService {
   }
 
   async findOne(id: string): Promise<Deck> {
-    return await this.model.findOne({"deckID":id})
+    return await this.model.findOne({"deckID":id,})
   }
-
+  async findByOwner(ownerID:string) :Promise<Deck[]>{
+    return await this.model.find({"ownerID":ownerID})
+  }
+ 
   async create(createDeckDto: CreateDeckDto): Promise<Deck> {
     return await new this.model({
       ...createDeckDto,
     }).save();
   }
 
-  async update(id: string, updateDeckDto: UpdateDeckDto): Promise<Deck> {
-    return await this.model.findOneAndUpdate({ "deckID": id }, { $set: {
+  async update(id: string,userID:string, updateDeckDto: UpdateDeckDto): Promise<Deck> {
+    return await this.model.findOneAndUpdate({ "deckID": id,"ownerID":userID }, { $set: {
       deckName:updateDeckDto.deckName,
       cards:updateDeckDto.cards
     } })
