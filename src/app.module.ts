@@ -4,11 +4,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CardModule } from './card/card.module';
 import { DeckModule } from './deck/deck.module';
-import { DatabaseModule, FirebaseModule } from '@app/common';
+import { DatabaseModule } from '@app/common';
 import { AssetsModule } from './assets/assets.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
