@@ -1,4 +1,15 @@
-import { Controller, Get, Put,Post,Delete,Body,Param,Patch ,UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Put,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Patch,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { FirebaseAuthGuard } from 'src/auth/guard/firebase.guard';
 import { CardService } from './card.service';
 import { User } from '../auth/decorators/user.decorator';
@@ -11,32 +22,36 @@ export class CardController {
 
   // @UseGuards(FirebaseAuthGuard)
   @Post()
-  async create(@Body() createCardDto: CreateCardDto){
+  async create(@Body() createCardDto: CreateCardDto) {
     return await this.cardService.create(createCardDto);
   }
 
   // @UseGuards(FirebaseAuthGuard)
   @Patch(':id')
-  async update(@Param('id')id:string,@Body()updateCardDto:UpdateCardDto){
-    return await this.cardService.update(id,updateCardDto);
+  async update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
+    return await this.cardService.update(id, updateCardDto);
   }
-
 
   // @UseGuards(FirebaseAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id:string){
+  async delete(@Param('id') id: string) {
     return await this.cardService.delete(id);
   }
 
   // @UseGuards(FirebaseAuthGuard)
   @Get()
-  async index(){
+  async index() {
     return await this.cardService.findAll();
   }
 
   // @UseGuards(FirebaseAuthGuard)
   @Get(':id')
-  async find(@Param('id')id:string){
+  async find(@Param('id') id: string) {
     return await this.cardService.findOne(id);
+  }
+
+  @Get('/random')
+  async getRandomCard(@Query('limit') limit: number) {
+    return await this.cardService.getRandomCard(limit);
   }
 }
