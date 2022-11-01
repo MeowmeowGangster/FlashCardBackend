@@ -41,7 +41,8 @@ export class CardService {
     return await this.model.findOneAndRemove({ cardID: id });
   }
 
-  async getRandomCard(number: number): Promise<Card[]> {
-    return await this.model.aggregate([{ $sample: { size: number } }]);
+  async getRandomCard(number: number) {
+    return 'Hello World';
+    // return await this.model.aggregate([{ $sample: { size: number } }]);
   }
 }
