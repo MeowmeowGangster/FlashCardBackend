@@ -1,18 +1,17 @@
 import * as admin from 'firebase-admin';
 import { Injectable, Logger } from '@nestjs/common';
-import * as firebaseConfig from './service-account.json';
 
 const firebase_params = {
-  type: firebaseConfig.type,
-  projectId: firebaseConfig.project_id,
-  privateKeyId: firebaseConfig.private_key_id,
-  privateKey: firebaseConfig.private_key,
-  clientEmail: firebaseConfig.client_email,
-  clientId: firebaseConfig.client_id,
-  authUri: firebaseConfig.auth_uri,
-  tokenUri: firebaseConfig.token_uri,
-  authProviderX509CertUrl: firebaseConfig.auth_provider_x509_cert_url,
-  clientC509CertUrl: firebaseConfig.client_x509_cert_url,
+  type: process.env.FIREBASE_TYPE,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  clientId: process.env.FIREBASE_CLIENT_ID,
+  authUri: process.env.FIREBASE_AUTH_URI,
+  tokenUri: process.env.FIREBASE_TOKEN_URI,
+  authProviderX509CertUrl: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+  clientC509CertUrl: process.env.FIREBASE_CLIENT_X509_CERT_URL,
 };
 
 @Injectable()
