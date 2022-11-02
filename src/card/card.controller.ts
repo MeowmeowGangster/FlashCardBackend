@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Put,
   Post,
   Delete,
   Body,
@@ -20,38 +19,39 @@ import { UpdateCardDto } from './dto/update-card.dto';
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
-  // @UseGuards(FirebaseAuthGuard)
-  @Post()
-  async create(@Body() createCardDto: CreateCardDto) {
-    return await this.cardService.create(createCardDto);
-  }
-
-  // @UseGuards(FirebaseAuthGuard)
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-    return await this.cardService.update(id, updateCardDto);
-  }
-
-  // @UseGuards(FirebaseAuthGuard)
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return await this.cardService.delete(id);
-  }
-
-  // @UseGuards(FirebaseAuthGuard)
+  @UseGuards(FirebaseAuthGuard)
   @Get()
   async index() {
     return await this.cardService.findAll();
   }
 
-  // @UseGuards(FirebaseAuthGuard)
-  @Get(':id')
-  async find(@Param('id') id: string) {
-    return await this.cardService.findOne(id);
-  }
-
   @Get('/random')
   async getRandomCard(@Query('limit') limit: number) {
-    return await this.cardService.getRandomCard(limit);
+    console.log(limit);
+    return await this.cardService.getRandomCard(Number(limit));
+  }
+
+  @UseGuards(FirebaseAuthGuard)
+  @Post()
+  async create(@Body() createCardDto: CreateCardDto) {
+    return await this.cardService.create(createCardDto);
+  }
+
+  @UseGuards(FirebaseAuthGuard)
+  @Patch('/cards/:id')
+  async update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
+    return await this.cardService.update(id, updateCardDto);
+  }
+
+  @UseGuards(FirebaseAuthGuard)
+  @Delete('/cards/:id')
+  async delete(@Param('id') id: string) {
+    return await this.cardService.delete(id);
+  }
+
+  @UseGuards(FirebaseAuthGuard)
+  @Get('/cards/:id')
+  async find(@Param('id') id: string) {
+    return await this.cardService.findOne(id);
   }
 }
