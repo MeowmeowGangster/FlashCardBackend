@@ -2,7 +2,7 @@ name: Flash Card API Deployment to Google Cloud Run
 on:
   push:
     branches:
-      - develop
+      - main
 env:
     REGION: 'asia-southeast1'
     SERVICE: 'flashcard-api'

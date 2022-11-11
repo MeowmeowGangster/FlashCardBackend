@@ -11,4 +11,11 @@ export class AuthController {
     // idtoken for LINE and send to for claim custom token
     return await this.authService.login(idtoken);
   }
+
+  @Get('/session')
+  async getSession(@Query('idtoken') idtoken: string) {
+    // idtoken for LINE and send to for claim custom token
+
+    return await this.authService.getSession(idtoken);
+  }
 }

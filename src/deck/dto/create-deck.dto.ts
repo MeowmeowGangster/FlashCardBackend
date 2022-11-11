@@ -1,6 +1,6 @@
-import { BaseDeckDto } from "./base-deck.dto";
+import { BaseDeckDto } from './base-deck.dto';
 
-export class CreateDeckDto extends BaseDeckDto{
-    ownerID:string
-    deckName: string;
+export class CreateDeckDto extends BaseDeckDto {
+  ownerID: string;
+  deckName: string;
 }
