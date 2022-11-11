@@ -47,3 +47,10 @@ git push origin ชื่อ/feature
 9 . ไปที่ Github แล้วกด Pull Request ขอ Merge ไปที่ Branch Develop
 เลือก Reviewer ให้เป็นอาร์ม และเลือก Assignee ให้เป็นตัวเอง แล้วกด Create Pull Request
 ไปทำอะไรอื่นก่อน อาร์มจะมา Review ให้ แล้วก็ Merge ให้
+
+# Firebase ID Token
+
+เป็น Token มีอายุ 1 ชั่วโมง ได้มาจากการนำ Token จาก Line มาแลก ที่ใช้ในการตรวจสอบว่าผู้ใช้งานเป็นคนที่มีสิทธิ์ใช้งานหรือไม่
+เมื่อหมด 1 ช.ม. ให้ทำการ Login ใหม่
+
+![alt token](images/auth.png)

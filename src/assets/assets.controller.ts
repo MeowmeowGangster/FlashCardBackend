@@ -12,7 +12,7 @@ export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}
 
   @Post('/assets/upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file')) // FileInterceptor is a NestJS interceptor that handles file uploads
   updateAsset(@UploadedFile() file: Express.Multer.File) {
     return this.assetsService.updateAsset(file);
   }

@@ -70,4 +70,8 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   async find(filterQuery: FilterQuery<TDocument>) {
     return this.model.find(filterQuery, {}, { lean: true });
   }
+
+  async aggegate(pipeline: any[]) {
+    return this.model.aggregate(pipeline);
+  }
 }

@@ -20,15 +20,15 @@ export class FirebaseService {
   private firebaseApp: any;
   constructor() {
     this.firebaseApp = admin.initializeApp({
-      credential: admin.credential.cert(firebase_params),
-      storageBucket: 'gs://standupcodelab.appspot.com',
+      credential: admin.credential.cert(firebase_params), // Initialize Firebase with firebase_params
+      storageBucket: 'gs://standupcodelab.appspot.com', // Initialize Firebase Storage
     });
     this.logger.log('Firebase initialized');
   }
   getAuth() {
-    return this.firebaseApp.auth();
+    return this.firebaseApp.auth(); // Return Firebase Auth
   }
   getApp() {
-    return this.firebaseApp;
+    return this.firebaseApp; // Return Firebase App
   }
 }
