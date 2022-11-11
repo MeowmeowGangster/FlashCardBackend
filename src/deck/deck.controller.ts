@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
@@ -28,6 +29,8 @@ export class DeckController {
   @Post('/decks')
   async create(@User() user, @Body() createDeckDto: CreateDeckDto) {
     createDeckDto.ownerID = user.user_id;
+    if (createDeckDto.deckName === undefined) throw new BadRequestException();
+    if (createDeckDto.deckName === '') throw new BadRequestException();
     return await this.deckService.create(createDeckDto);
   }
 
