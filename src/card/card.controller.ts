@@ -11,11 +11,10 @@ import {
 } from '@nestjs/common';
 import { FirebaseAuthGuard } from 'src/auth/guard/firebase.guard';
 import { CardService } from './card.service';
-import { User } from '../auth/decorators/user.decorator';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 
-@Controller('cards')
+@Controller()
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
@@ -25,7 +24,7 @@ export class CardController {
     return await this.cardService.findAll();
   }
 
-  @Get('/random')
+  @Get('/cards/random')
   async getRandomCard(@Query('limit') limit: number) {
     console.log(limit);
     return await this.cardService.getRandomCard(Number(limit));

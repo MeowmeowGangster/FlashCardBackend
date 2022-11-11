@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { FirebaseService } from '@app/common';
 @Injectable()
@@ -33,6 +33,20 @@ export class AuthService {
     return decodedToken;
   }
 
+  async getSession(idToken: string) {
+    const decodedToken = await this.firebaseService
+      .getAuth()
+      .createSessionCookie(idToken, { expiresIn: 60 * 60 * 24 * 5 * 1000 })
+      .then((sessionCookie) => {
+        return sessionCookie;
+      })
+      .catch((error) => {
+        this.logger.log(error);
+        throw new UnauthorizedException();
+      });
+    return { token: decodedToken };
+  }
+
   async login(idtoken: string) {
     const decodedToken = await this.validateUser(idtoken);
 
@@ -42,7 +56,7 @@ export class AuthService {
       .getUser(decodedToken.userId)
       .then(() => true)
       .catch(() => false); /// Check if user exists in Firebase
-
+    this.logger.debug('uidExists', uidExists);
     if (!uidExists) {
       await this.firebaseService
         .getAuth()
@@ -70,6 +84,7 @@ export class AuthService {
         .createCustomToken(decodedToken.userId, {
           role: 'user',
         }); // Create custom token for user
+      this.logger.log('token', token);
       return { token: token };
     }
   }

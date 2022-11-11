@@ -14,25 +14,25 @@ import { DeckService } from './deck.service';
 import { FirebaseAuthGuard } from 'src/auth/guard/firebase.guard';
 import { User } from 'src/auth/decorators/user.decorator';
 
-@Controller('decks')
+@Controller()
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
 
   @UseGuards(FirebaseAuthGuard)
-  @Get('decks')
+  @Get('/decks')
   async findByOwner(@User() user) {
     return await this.deckService.findByOwner(user.user_id);
   }
 
   @UseGuards(FirebaseAuthGuard)
-  @Post('decks')
+  @Post('/decks')
   async create(@User() user, @Body() createDeckDto: CreateDeckDto) {
     createDeckDto.ownerID = user.user_id;
     return await this.deckService.create(createDeckDto);
   }
 
   @UseGuards(FirebaseAuthGuard)
-  @Patch('decks/:id')
+  @Patch('/decks/:id')
   async update(
     @Param('id') id: string,
     @Body() updateDeckDto: UpdateDeckDto,
@@ -42,13 +42,13 @@ export class DeckController {
   }
 
   @UseGuards(FirebaseAuthGuard)
-  @Delete('decks/:id')
+  @Delete('/decks/:id')
   async delete(@Param('id') id: string) {
     return await this.deckService.delete(id);
   }
 
   @UseGuards(FirebaseAuthGuard)
-  @Get('decks/:id')
+  @Get('/decks/:id')
   async findByID(@Param('id') id: string) {
     return await this.deckService.findOne(id);
   }
