@@ -24,7 +24,7 @@ export class FirebaseStrategy extends PassportStrategy(Strategy) {
         /* Send Token to firebase via FirebaseService
         for verify token */
         .getAuth()
-        .verifyIdToken(payload);
+        .verifySessionCookie(payload, true);
 
       // Verify token from FirebaseService
       this.logger.debug(decodeToken);

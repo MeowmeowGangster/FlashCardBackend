@@ -49,6 +49,13 @@ export class AuthService {
 
   async login(idtoken: string) {
     const decodedToken = await this.validateUser(idtoken);
+    const claims = {
+      user_id: decodedToken.userId,
+      name: decodedToken.displayName,
+      picture: decodedToken.pictureUrl,
+      role: 'user',
+      provider: 'line',
+    };
 
     this.logger.log(decodedToken);
     const uidExists = this.firebaseService
@@ -57,6 +64,7 @@ export class AuthService {
       .then(() => true)
       .catch(() => false); /// Check if user exists in Firebase
     this.logger.debug('uidExists', uidExists);
+
     if (!uidExists) {
       await this.firebaseService
         .getAuth()
@@ -74,16 +82,13 @@ export class AuthService {
         });
       const token = await this.firebaseService
         .getAuth()
-        .createCustomToken(decodedToken.userId, {
-          role: 'user',
-        }); // Create custom token for user
+        .createCustomToken(decodedToken.userId, claims); // Create custom token for user
+
       return { token: token };
     } else {
       const token = await this.firebaseService
         .getAuth()
-        .createCustomToken(decodedToken.userId, {
-          role: 'user',
-        }); // Create custom token for user
+        .createCustomToken(decodedToken.userId, claims); // Create custom token for user
       this.logger.log('token', token);
       return { token: token };
     }
