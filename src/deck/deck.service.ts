@@ -12,11 +12,16 @@ export class DeckService {
   ) {}
 
   async findAll(): Promise<Deck[]> {
-    return await this.model.find().exec();
+    const decks = await this.model.find().exec();
+    console.log(decks);
+    return decks;
   }
 
   async findOne(id: string): Promise<Deck> {
-    return await this.model.findOne({ deckID: id });
+    // console.log(id);
+    const deck = await this.model.findOne({ deckID: id }).exec();
+    console.log(deck);
+    return deck;
   }
   async findByOwner(ownerID: string): Promise<Deck[]> {
     return await this.model.find({ ownerID: ownerID });
