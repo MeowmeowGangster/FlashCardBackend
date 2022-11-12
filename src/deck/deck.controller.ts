@@ -14,6 +14,7 @@ import { UpdateDeckDto } from './dto/update-deck.dto';
 import { DeckService } from './deck.service';
 import { FirebaseAuthGuard } from 'src/auth/guard/firebase.guard';
 import { User } from 'src/auth/decorators/user.decorator';
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller()
 export class DeckController {
@@ -29,9 +30,16 @@ export class DeckController {
   @Post('/decks')
   async create(@User() user, @Body() createDeckDto: CreateDeckDto) {
     createDeckDto.ownerID = user.user_id;
+    createDeckDto.deckID = uuidv4();
     if (createDeckDto.deckName === undefined) throw new BadRequestException();
     if (createDeckDto.deckName === '') throw new BadRequestException();
     return await this.deckService.create(createDeckDto);
+  }
+  @UseGuards(FirebaseAuthGuard)
+  @Get('/decks/:id')
+  async findByID(@Param('id') id: string) {
+    console.log(id);
+    return await this.deckService.findOne(id);
   }
 
   @UseGuards(FirebaseAuthGuard)
@@ -48,11 +56,5 @@ export class DeckController {
   @Delete('/decks/:id')
   async delete(@Param('id') id: string) {
     return await this.deckService.delete(id);
-  }
-
-  @UseGuards(FirebaseAuthGuard)
-  @Get('/decks/:id')
-  async findByID(@Param('id') id: string) {
-    return await this.deckService.findOne(id);
   }
 }
