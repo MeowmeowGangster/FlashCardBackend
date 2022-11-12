@@ -13,6 +13,8 @@ import { FirebaseAuthGuard } from 'src/auth/guard/firebase.guard';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { User } from 'src/auth/decorators/user.decorator';
 
 @Controller()
 export class CardController {
@@ -31,8 +33,11 @@ export class CardController {
   }
 
   @UseGuards(FirebaseAuthGuard)
-  @Post()
-  async create(@Body() createCardDto: CreateCardDto) {
+  @Post('/cards')
+  async create(@User() user, @Body() createCardDto: CreateCardDto) {
+    createCardDto.ownerID = user.user_id;
+    createCardDto.cardID = uuidv4();
+
     return await this.cardService.create(createCardDto);
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateDeckDto } from './dto/create-deck.dto';
@@ -19,9 +19,58 @@ export class DeckService {
 
   async findOne(id: string): Promise<Deck> {
     // console.log(id);
-    const deck = await this.model.findOne({ deckID: id }).exec();
-    console.log(deck);
-    return deck;
+    const deckTemp = await this.model.findOne({ deckID: id }).exec();
+    if (!(deckTemp.cards.length > 0)) return deckTemp;
+    const deck = await this.model
+      .aggregate([
+        {
+          $match: {
+            deckID: id,
+          },
+        },
+        {
+          $unwind: {
+            path: '$cards',
+          },
+        },
+        {
+          $lookup: {
+            from: 'cards',
+            localField: 'cards',
+            foreignField: 'cardID',
+            as: 'cards',
+          },
+        },
+        {
+          $unwind: {
+            path: '$cards',
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            cards: {
+              $push: '$cards',
+            },
+            deckName: {
+              $first: '$deckName',
+            },
+            ownerID: {
+              $first: '$ownerID',
+            },
+            deckID: {
+              $first: '$deckID',
+            },
+          },
+        },
+      ])
+      .exec();
+
+    if (deck.length === 0) {
+      throw new NotFoundException('Deck not found');
+    }
+
+    return deck[0];
   }
   async findByOwner(ownerID: string): Promise<Deck[]> {
     return await this.model.find({ ownerID: ownerID });

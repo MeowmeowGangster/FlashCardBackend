@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Deck, DeckDocument } from 'src/deck/schemas/deck.schema';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { Card, CardDocument } from './schemas/card.schema';
@@ -10,6 +11,7 @@ export class CardService {
   private readonly logger = new Logger(CardService.name);
   constructor(
     @InjectModel(Card.name) private readonly model: Model<CardDocument>,
+    @InjectModel(Deck.name) private readonly deck: Model<DeckDocument>,
   ) {}
 
   async findAll(): Promise<Card[]> {
@@ -21,6 +23,15 @@ export class CardService {
   }
 
   async create(createCardDto: CreateCardDto): Promise<Card> {
+    console.log(createCardDto);
+    await this.deck
+      .findOneAndUpdate(
+        { deckID: createCardDto.deckID },
+        {
+          $push: { cards: createCardDto.cardID },
+        },
+      )
+      .exec();
     return await new this.model({
       ...createCardDto,
     }).save();
