@@ -12,6 +12,12 @@ export class Card {
   cardName: string;
 
   @Prop()
+  ownerID?: string;
+
+  @Prop()
+  deckID?: string;
+
+  @Prop()
   cardPic: string;
 
   @Prop({ required: true })
