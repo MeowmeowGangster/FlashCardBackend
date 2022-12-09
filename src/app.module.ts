@@ -5,7 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { CardModule } from './card/card.module';
 import { DeckModule } from './deck/deck.module';
 import { DatabaseModule } from '@app/common';
-import { AssetsModule } from './assets/assets.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppLoggerMiddleware } from './applogger.middleware';
@@ -16,7 +15,6 @@ import { AppLoggerMiddleware } from './applogger.middleware';
     AuthModule,
     CardModule,
     DeckModule,
-    AssetsModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

@@ -7,6 +7,7 @@ import { FirebaseModule } from '@app/common';
 import { Card, CardSchema } from './schemas/card.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Deck, DeckSchema } from '../deck/schemas/deck.schema';
+import { AssetsService } from './assets.service';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { Deck, DeckSchema } from '../deck/schemas/deck.schema';
     ]),
   ],
   controllers: [CardController],
-  providers: [CardService, FirebaseStrategy],
+  providers: [CardService, AssetsService, FirebaseStrategy],
 })
 export class CardModule {}
