@@ -39,7 +39,7 @@ export class CardController {
     return await this.cardService.getRandomCard(Number(limit));
   }
 
-  // @UseGuards(FirebaseAuthGuard)
+  @UseGuards(FirebaseAuthGuard)
   @Post('/cards')
   @UseInterceptors(FileInterceptor('file')) // FileInterceptor is a NestJS interceptor that handles file uploads
   async create(
@@ -47,7 +47,7 @@ export class CardController {
     @User() user,
     @Body() createCardDto: CreateCardDto,
   ) {
-    createCardDto.ownerID = 'ddd';
+    createCardDto.ownerID = user.user_id;
     createCardDto.cardID = uuidv4();
 
     const response = await this.assestsServie.updateAsset(file);
