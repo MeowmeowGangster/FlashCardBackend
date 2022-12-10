@@ -53,8 +53,15 @@ export class CardService {
     return await this.model.findOneAndRemove({ cardID: id });
   }
 
-  async getRandomCard(limit: number): Promise<Card[]> {
-    const rest = await this.model.aggregate([{ $sample: { size: limit } }]);
+  async getRandomCard(deckid: string, limit: number): Promise<Card[]> {
+    const rest = await this.model.aggregate([
+      {
+        $match: {
+          deckID: deckid,
+        },
+      },
+      { $sample: { size: limit } },
+    ]);
     this.logger.log(rest);
 
     return rest;
