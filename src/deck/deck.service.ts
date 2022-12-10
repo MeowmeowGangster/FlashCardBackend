@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Card, CardDocument } from 'src/card/schemas/card.schema';
 import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
 import { Deck, DeckDocument } from './schemas/deck.schema';
@@ -8,20 +9,21 @@ import { Deck, DeckDocument } from './schemas/deck.schema';
 @Injectable()
 export class DeckService {
   constructor(
-    @InjectModel(Deck.name) private readonly model: Model<DeckDocument>,
+    @InjectModel(Deck.name) private readonly deck: Model<DeckDocument>,
+    @InjectModel(Card.name) private readonly card: Model<CardDocument>,
   ) {}
 
   async findAll(): Promise<Deck[]> {
-    const decks = await this.model.find().exec();
+    const decks = await this.deck.find().exec();
     console.log(decks);
     return decks;
   }
 
   async findOne(id: string): Promise<Deck> {
     // console.log(id);
-    const deckTemp = await this.model.findOne({ deckID: id }).exec();
+    const deckTemp = await this.deck.findOne({ deckID: id }).exec();
     if (!(deckTemp.cards.length > 0)) return deckTemp;
-    const deck = await this.model
+    const deck = await this.deck
       .aggregate([
         {
           $match: {
@@ -73,11 +75,11 @@ export class DeckService {
     return deck[0];
   }
   async findByOwner(ownerID: string): Promise<Deck[]> {
-    return await this.model.find({ ownerID: ownerID });
+    return await this.deck.find({ ownerID: ownerID });
   }
 
   async create(createDeckDto: CreateDeckDto): Promise<Deck> {
-    return await new this.model({
+    return await new this.deck({
       ...createDeckDto,
     }).save();
   }
@@ -87,7 +89,7 @@ export class DeckService {
     userID: string,
     updateDeckDto: UpdateDeckDto,
   ): Promise<Deck> {
-    return await this.model.findOneAndUpdate(
+    return await this.deck.findOneAndUpdate(
       { deckID: id, ownerID: userID },
       {
         $set: {
@@ -98,6 +100,10 @@ export class DeckService {
     );
   }
   async delete(id: string): Promise<Deck> {
-    return await this.model.findOneAndRemove({ deckID: id });
+    const cardslist = await (await this.deck.findOne({ deckID: id })).cards;
+    for (let i = 0; i <= cardslist.length; i++) {
+      await this.card.deleteOne({ cardID: cardslist[i] });
+    }
+    return await this.deck.findOneAndRemove({ deckID: id });
   }
 }
