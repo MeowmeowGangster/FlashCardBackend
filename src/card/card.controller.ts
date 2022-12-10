@@ -28,7 +28,7 @@ export class CardController {
   ) {}
 
   @UseGuards(FirebaseAuthGuard)
-  @Get()
+  @Get('/cards')
   async index() {
     return await this.cardService.findAll();
   }
@@ -50,16 +50,27 @@ export class CardController {
     createCardDto.ownerID = user.user_id;
     createCardDto.cardID = uuidv4();
 
-    const response = await this.assestsServie.updateAsset(file);
-
-    createCardDto.cardPic = response.url[0];
+    if (file) {
+      const response = await this.assestsServie.updateAsset(file);
+      createCardDto.cardPic = response.url[0];
+    }
 
     return await this.cardService.create(createCardDto);
   }
 
   @UseGuards(FirebaseAuthGuard)
   @Patch('/cards/:id')
-  async update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
+    if (file) {
+      const response = await this.assestsServie.updateAsset(file);
+      updateCardDto.cardPic = response.url[0];
+    }
+
     return await this.cardService.update(id, updateCardDto);
   }
 
