@@ -33,10 +33,13 @@ export class CardController {
     return await this.cardService.findAll();
   }
 
-  @Get('/cards/random')
-  async getRandomCard(@Query('limit') limit: number) {
+  @Get('/cards/random/:deckid')
+  async getRandomCard(
+    @Param('deckid') deckid: string,
+    @Query('limit') limit: number,
+  ) {
     console.log(limit);
-    return await this.cardService.getRandomCard(Number(limit));
+    return await this.cardService.getRandomCard(deckid, Number(limit));
   }
 
   @UseGuards(FirebaseAuthGuard)
