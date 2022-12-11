@@ -6,7 +6,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
-
+  app.enableCors();
   app.setGlobalPrefix('api/v1');
   const config = new DocumentBuilder()
     .setTitle('Flashback API')

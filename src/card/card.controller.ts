@@ -78,9 +78,12 @@ export class CardController {
   }
 
   @UseGuards(FirebaseAuthGuard)
-  @Delete('/cards/:id')
-  async delete(@Param('id') id: string) {
-    return await this.cardService.delete(id);
+  @Delete('/cards/:cardid/:deckid')
+  async delete(
+    @Param('cardid') cardid: string,
+    @Param('deckid') deckid: string,
+  ) {
+    return await this.cardService.delete(cardid, deckid);
   }
 
   @UseGuards(FirebaseAuthGuard)
