@@ -49,8 +49,15 @@ export class CardService {
       },
     );
   }
-  async delete(id: string): Promise<Card> {
-    return await this.model.findOneAndRemove({ cardID: id });
+  async delete(card_id: string, deck_id: string): Promise<Card> {
+    await this.deck.findOneAndUpdate(
+      { deckID: deck_id },
+      {
+        $pull: { cards: card_id },
+      },
+    );
+
+    return await this.model.findOneAndRemove({ cardID: card_id });
   }
 
   async getRandomCard(deckid: string, limit: number): Promise<Card[]> {
