@@ -5,7 +5,7 @@ export type CardDocument = Card & Document;
 
 @Schema({ timestamps: true })
 export class Card {
-  @Prop({ required: true })
+  @Prop({ require: true })
   cardID: string;
 
   @Prop({ require: true })
